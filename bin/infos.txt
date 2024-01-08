@@ -1,0 +1,8 @@
+https://github.com/fengwang/nbody-simulation
+
+Método de Runge-Kutta:
+https://pt.wikipedia.org/wiki/M%C3%A9todo_de_Runge-Kutta
+
+Barnes–Hut simulation:
+https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation
+
