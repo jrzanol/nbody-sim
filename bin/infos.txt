@@ -6,3 +6,7 @@ https://pt.wikipedia.org/wiki/M%C3%A9todo_de_Runge-Kutta
 Barnes–Hut simulation:
 https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation
 
+Usar esse:
+https://github.com/creekorful/nbody-cpp/tree/master/Source/Application
+
+https://pt.wikipedia.org/wiki/Lei_da_gravita%C3%A7%C3%A3o_universal
