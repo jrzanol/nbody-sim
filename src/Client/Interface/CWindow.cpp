@@ -116,10 +116,6 @@ bool CWindow::Render()
 
     m_VP = (projection * view);
     glUniformMatrix4fv(glGetUniformLocation(m_ProgramId, "u_vp"), 1, GL_FALSE, glm::value_ptr(m_VP));
-
-    // Draw Lights.
-    //for (auto& it : m_Light)
-    m_Light.Draw(m_ProgramId);
     
     // Draw objects.
     for (unsigned int i = 0; i < MAX_OBJECT; ++i)
@@ -153,19 +149,6 @@ bool CWindow::Render()
 
         ImGui::NewLine();
         ImGui::Text("FPS: %u", g_FPS);
-
-        //ImGui::RadioButton("Arrastar Vertices/Triangulos", &CUtil::m_EditorType, 0);
-        //ImGui::RadioButton("Criar Vertices", &CUtil::m_EditorType, 1);
-        //ImGui::RadioButton("Remover Vertices", &CUtil::m_EditorType, 2);
-        //ImGui::RadioButton("Mover Objetos", &CUtil::m_EditorType, 3);
-        //ImGui::RadioButton("Criar Curva", &CUtil::m_EditorType, 4);
-        //ImGui::RadioButton("Visualizar", &CUtil::m_EditorType, 5);
-        //if (ImGui::Button("Criar Modelo #1"))
-        //    CreateModel(0, "Model/main.obj");
-        //if (ImGui::Button("Criar Modelo #2"))
-        //    CreateModel(1, "Model2/main.obj");
-        //if (ImGui::Button("Criar Modelo #3"))
-        //    CreateModel(2, "Model3/main.obj");
     ImGui::End();
 
     // Rendering the ImGui.
@@ -183,62 +166,6 @@ bool CWindow::Render()
         it->ProcessInput(g_Window);
 
     return glfwWindowShouldClose(g_Window);
-}
-
-CModel* CWindow::CreateModel(int type, const char* fileModel)
-{
-    glm::vec3 newPosition = glm::vec3((-0.75f + 1.8f * (5.f - (rand() % 10))), 0.f, -30.f);
-
-    if (type == 4 || type == 5 || CGame::CheckMovement(newPosition) == NULL && CUtil::g_EnemyCount < 32)
-    {
-        CModel* m = CModel::LoadModel(fileModel);
-        if (m)
-        {
-            if (type < 4)
-            { // Enemys.
-                m->m_Scale = glm::vec3(0.1f, 0.1f, 0.1f);
-                
-                if (type == 1 || type == 2 || type == 3)
-                    *m->GetPosition() = newPosition;
-            }
-            else if (type == 4)
-            { // Bullets.
-                m->m_Scale = glm::vec3(0.05f, 0.f, 0.5f);
-
-                newPosition = *CModel::GetModel(0)->GetPosition();
-                newPosition.z -= 1.5f;
-
-                *m->GetPosition() = newPosition;
-            }
-            else if (type == 5)
-            { // Stars.
-                float x = ((rand() % 30000) - 10000) / 1000.f;
-                float z = ((rand() % 50000) - 1000) / 1000.f;
-
-                m->m_Scale = glm::vec3(0.03f, 0.f, 0.05f);
-                newPosition = glm::vec3(x, ((rand() % 20) *  - 5.f), -z);
-
-                *m->GetPosition() = newPosition;
-            }
-            else if (type == 6)
-            { // Enemy Bullets.
-                m->m_Scale = glm::vec3(0.05f, 0.f, 0.5f);
-
-                *m->GetPosition() = newPosition;
-            }
-
-            m->m_InitPosition = newPosition;
-            m->m_SpawnTime = g_LastTime;
-            m->m_ModelType = type;
-
-            if (type >= 1 && type <= 3)
-                CUtil::g_EnemyCount++;
-
-            return m;
-        }
-    }
-
-    return NULL;
 }
 
 GLuint CWindow::CompileShader(const char* shaderCode, GLenum type)

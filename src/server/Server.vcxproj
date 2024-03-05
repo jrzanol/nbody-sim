@@ -72,12 +72,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\..\bin\</OutDir>
-    <IncludePath>..\..\3rdparty\rpclib\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\3rdparty\rpclib\include;$(SolutionDir)..\3rdparty\glm;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\3rdparty\rpclib\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\bin\</OutDir>
-    <IncludePath>..\..\3rdparty\rpclib\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\3rdparty\rpclib\include;$(SolutionDir)..\3rdparty\glm;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\3rdparty\rpclib\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

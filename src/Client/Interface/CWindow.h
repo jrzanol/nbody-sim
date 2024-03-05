@@ -6,7 +6,6 @@
 #include "CUtil.h"
 #include "CCamera.h"
 #include "CModel.h"
-#include "CLight.h"
 #include "CGame.h"
 
 class CWindow
@@ -20,11 +19,9 @@ public:
 	bool Render();
 
 	static const glm::mat4& GetVP();
-	static CModel* CreateModel(int, const char*);
 
 private:
 	CGame m_Game;
-	CLight m_Light;
 	CCamera m_Camera;
 	
 	GLuint m_ProgramId;

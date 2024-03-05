@@ -14,8 +14,11 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Game">
+    <Filter Include="Space">
       <UniqueIdentifier>{881fe445-063c-4411-a0e8-91a75b79a409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\ImGui">
+      <UniqueIdentifier>{977179b2-fd27-4c7a-a6ea-11c8d01fa720}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,20 +40,35 @@
     <ClCompile Include="Util\CUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\CCamera.cpp">
-      <Filter>Interface</Filter>
-    </ClCompile>
     <ClCompile Include="Interface\CWindow.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="Model\CModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\CLight.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Interface\CGame.cpp">
-      <Filter>Game</Filter>
+      <Filter>Space</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_draw.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_tables.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_widgets.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Interface\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\CCamera.cpp">
+      <Filter>Space</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,20 +87,20 @@
     <ClInclude Include="Util\CUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\CCamera.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\CWindow.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="Model\CModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\CLight.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Interface\CGame.h">
-      <Filter>Game</Filter>
+      <Filter>Space</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\CCamera.h">
+      <Filter>Space</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nbody.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

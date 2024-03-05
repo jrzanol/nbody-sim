@@ -8,8 +8,10 @@
 
 struct BODY
 {
-	float X, Y, Z;
-	MSGPACK_DEFINE_ARRAY(X, Y, Z)
+	int Type;
+	float PosX, PosY, PosZ;
+
+	MSGPACK_DEFINE_ARRAY(Type, PosX, PosY, PosZ)
 };
 
 using NBODY = std::vector<BODY>;

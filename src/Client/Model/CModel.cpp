@@ -16,8 +16,6 @@ CModel::CModel()
     m_Scale = glm::vec3(1.f, 1.f, 1.f);
     m_Angle = 0.f;
 
-    m_InitPosition = m_Position;
-    m_SpawnTime = 0.f;
     m_ModelType = -1;
 
     m_DecisionOp = false;

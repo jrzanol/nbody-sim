@@ -24,8 +24,6 @@ public:
 	glm::vec3 m_Scale;
 	float m_Angle;
 
-	glm::vec3 m_InitPosition;
-	float m_SpawnTime;
 	int m_ModelType;
 
 	bool m_DecisionOp;

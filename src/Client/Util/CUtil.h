@@ -10,9 +10,6 @@ public:
 
 	static const char* m_VertexShader;
 	static const char* m_FragmentShader;
-
-	static bool IntersectSphere(const glm::vec3&, const glm::vec3&, float, float&, float&);
-	static bool RayIntersectsTriangle(glm::vec3, glm::vec3, glm::vec3*, glm::vec3&);
 };
 
 extern unsigned int g_FPS;

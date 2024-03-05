@@ -86,15 +86,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\bin\</OutDir>
     <IntDir>out\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\include;$(SolutionDir)..\3rdparty\imgui;$(SolutionDir)..\3rdparty\imgui\backends;$(SolutionDir)..\3rdparty\glew-2.2.0\include;$(SolutionDir)..\3rdparty\glm;$(SolutionDir)..\3rdparty\assimp\include;$(SolutionDir)Client;$(SolutionDir)Client\Util;$(SolutionDir)Client\Model;$(SolutionDir)..\3rdparty\stb;$(SolutionDir)..\3rdparty\assimp\build\Win32\include;$(SolutionDir)Client\Editor;$(SolutionDir)Client\Interface;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\lib-vc2022;$(SolutionDir)..\3rdparty\glew-2.2.0\lib\Release\Win32;$(SolutionDir)..\3rdparty;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\include;$(SolutionDir)..\3rdparty\imgui;$(SolutionDir)..\3rdparty\imgui\backends;$(SolutionDir)..\3rdparty\glew-2.2.0\include;$(SolutionDir)..\3rdparty\glm;$(SolutionDir)..\3rdparty\assimp\include;$(SolutionDir)Client;$(SolutionDir)Client\Util;$(SolutionDir)Client\Model;$(SolutionDir)..\3rdparty\stb;$(SolutionDir)..\3rdparty\assimp\build\Win32\include;$(SolutionDir)Client\Editor;$(SolutionDir)Client\Interface;$(SolutionDir)..\3rdparty\rpclib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\lib-vc2022;$(SolutionDir)..\3rdparty\glew-2.2.0\lib\Release\Win32;$(SolutionDir)..\3rdparty\assimp\lib\Release;$(LibraryPath)</LibraryPath>
     <TargetName>Client</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\bin\</OutDir>
     <IntDir>out\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\include;$(SolutionDir)..\3rdparty\imgui;$(SolutionDir)..\3rdparty\imgui\backends;$(SolutionDir)..\3rdparty\glew-2.2.0\include;$(SolutionDir)..\3rdparty\glm;$(SolutionDir)..\3rdparty\assimp\include;$(SolutionDir)Client;$(SolutionDir)Client\Util;$(SolutionDir)Client\Model;$(SolutionDir)..\3rdparty\stb;$(SolutionDir)..\3rdparty\assimp\build\Win32\include;$(SolutionDir)Client\Editor;$(SolutionDir)Client\Interface;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\lib-vc2022;$(SolutionDir)..\3rdparty\glew-2.2.0\lib\Release\Win32;$(SolutionDir)..\3rdparty;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\include;$(SolutionDir)..\3rdparty\imgui;$(SolutionDir)..\3rdparty\imgui\backends;$(SolutionDir)..\3rdparty\glew-2.2.0\include;$(SolutionDir)..\3rdparty\glm;$(SolutionDir)..\3rdparty\assimp\include;$(SolutionDir)Client;$(SolutionDir)Client\Util;$(SolutionDir)Client\Model;$(SolutionDir)..\3rdparty\stb;$(SolutionDir)..\3rdparty\assimp\build\Win32\include;$(SolutionDir)Client\Editor;$(SolutionDir)Client\Interface;$(SolutionDir)..\3rdparty\rpclib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\3rdparty\glfw-3.3.9.bin.WIN32\lib-vc2022;$(SolutionDir)..\3rdparty\glew-2.2.0\lib\Release\Win32;$(SolutionDir)..\3rdparty\assimp\lib\Release;$(LibraryPath)</LibraryPath>
     <TargetName>Client</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -169,7 +169,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Editor\CLight.cpp" />
+    <ClCompile Include="..\..\3rdparty\imgui\backends\imgui_impl_glfw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\backends\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Interface\CCamera.cpp" />
     <ClCompile Include="Interface\CGame.cpp" />
     <ClCompile Include="Interface\CWindow.cpp" />
@@ -187,7 +210,7 @@
     <ClCompile Include="Util\CUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Editor\CLight.h" />
+    <ClInclude Include="..\nbody.h" />
     <ClInclude Include="Interface\CCamera.h" />
     <ClInclude Include="Interface\CGame.h" />
     <ClInclude Include="Interface\CWindow.h" />
