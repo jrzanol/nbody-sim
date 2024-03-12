@@ -17,6 +17,7 @@ public:
 	glm::mat4& GetModelPos() const;
 	glm::vec3* GetPosition() { return &m_Position; }
 
+	int m_Id;
 	std::string m_ObjName;
 	std::string m_ObjDir;
 	std::vector<CMesh*> m_Meshes;
@@ -31,6 +32,7 @@ public:
 	float m_LastAttackTimer;
 
 	static CModel* GetModel(int);
+	static CModel* GetModelFromId(int);
 	static CModel* LoadModel(std::string, bool = true);
 	static void DeleteModel(CModel*);
 	static void DeleteAllModel();

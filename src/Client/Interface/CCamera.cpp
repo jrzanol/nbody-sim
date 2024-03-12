@@ -38,15 +38,65 @@ void CCamera::ProcessSecTimer()
 #endif
 }
 
+void CCamera::ProcessMouseDragEvent(GLFWwindow* window, float xoffset, float yoffset)
+{
+    xoffset *= 0.1f;
+    yoffset *= 0.1f;
+
+    m_Yaw += xoffset;
+    m_Pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (m_Pitch > 89.0f)
+        m_Pitch = 89.0f;
+    else if (m_Pitch < -89.0f)
+        m_Pitch = -89.0f;
+
+    // update Front, Right and Up Vectors using the updated Euler angles
+    UpdateCameraVectors();
+}
+
+void CCamera::ProcessMouseScroll(GLFWwindow* window, double _xoffset, double _yoffset)
+{
+    float yoffset = static_cast<float>(_yoffset);
+
+    m_Zoom -= (float)yoffset;
+
+    if (m_Zoom < 1.0f)
+        m_Zoom = 1.0f;
+    else if (m_Zoom > 45.0f)
+        m_Zoom = 45.0f;
+}
+
 void CCamera::ProcessInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        ProcessKeyboard(Camera_Movement::FORWARD, g_DeltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        ProcessKeyboard(Camera_Movement::BACKWARD, g_DeltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        ProcessKeyboard(Camera_Movement::LEFT, g_DeltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        ProcessKeyboard(Camera_Movement::RIGHT, g_DeltaTime);
 }
 
 glm::mat4 CCamera::GetViewMatrix()
 {
     return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+}
+
+void CCamera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
+{
+    float velocity = (7.5f * deltaTime);
+
+    if (direction == Camera_Movement::FORWARD)
+        m_Position += m_Front * velocity;
+    else if (direction == Camera_Movement::BACKWARD)
+        m_Position -= m_Front * velocity;
+    else if (direction == Camera_Movement::LEFT)
+        m_Position -= m_Right * velocity;
+    else if (direction == Camera_Movement::RIGHT)
+        m_Position += m_Right * velocity;
 }
 
 void CCamera::UpdateCameraVectors()

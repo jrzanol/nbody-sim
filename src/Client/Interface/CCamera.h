@@ -5,7 +5,7 @@
 
 #include "CEvent.h"
 
-class CCamera
+class CCamera : CEvent
 {
 public:
 	CCamera();
@@ -13,6 +13,8 @@ public:
 
 	void ProcessSecTimer();
 	void ProcessInput(GLFWwindow*);
+	void ProcessMouseDragEvent(GLFWwindow*, float, float);
+	void ProcessMouseScroll(GLFWwindow*, double, double);
 
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix.
 	glm::mat4 GetViewMatrix();
@@ -31,6 +33,16 @@ private:
 	// Euler Angles.
 	float m_Yaw;
 	float m_Pitch;
+
+	// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods.
+	enum class Camera_Movement {
+		FORWARD,
+		BACKWARD,
+		LEFT,
+		RIGHT
+	};
+
+	void ProcessKeyboard(Camera_Movement, float);
 
 	// Calculates the front vector from the Camera's (updated) Euler Angles.
 	void UpdateCameraVectors();

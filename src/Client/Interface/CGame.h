@@ -6,6 +6,8 @@
 #include "CUtil.h"
 #include "CModel.h"
 
+#include "rpc/client.h"
+
 class CGame : CEvent
 {
 public:
@@ -18,5 +20,8 @@ public:
 	void ProcessMouseButtonEvent(GLFWwindow*, int, int, int);
 	void ProcessMiliSecTimer();
 	void ProcessSecTimer();
+
+private:
+	rpc::client* m_Rpc;
 };
 

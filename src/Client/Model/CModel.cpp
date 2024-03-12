@@ -56,6 +56,15 @@ CModel* CModel::GetModel(int Id)
     return &g_List[Id];
 }
 
+CModel* CModel::GetModelFromId(int Id)
+{
+    for (int i = 0; i < MAX_OBJECT; ++i)
+        if (g_List[i].m_Atived && g_List[i].m_Id == Id)
+            return &g_List[i];
+
+    return NULL;
+}
+
 CModel* CModel::LoadModel(std::string file, bool spawn)
 {
     if (listCounter >= MAX_OBJECT || g_List[listCounter].m_Atived)

@@ -19,20 +19,23 @@ class CBody
 public:
     CBody()
     {
+        m_Id = 0;
+        m_Type = 0;
+        m_Mass = 0.f;
+
         m_Position = glm::vec3();
         m_Velocity = glm::vec3();
-
-        m_Mass = 0.f;
     }
 
+    int GetId() const { return m_Id; }
     int GetType() const { return m_Type; }
     float GetMass() const { return m_Mass; }
     glm::vec3 GetPosition() const { return m_Position; }
     glm::vec3 GetVelocity() const { return m_Velocity; }
     bool operator==(const CBody& b) { return m_Position == b.GetPosition(); }
 
-    void UpdatePosition(glm::vec3 pos) { m_Position = pos; }
-    void UpdateVelocity(glm::vec3 vel) { m_Velocity = vel; }
+    void UpdatePosition(glm::vec3 pos) { m_Position -= pos; }
+    void UpdateVelocity(glm::vec3 vel) { m_Velocity += vel; }
 
     glm::vec3 GetAttraction(const CBody& otherBody) const
     {
@@ -52,16 +55,17 @@ public:
     {
         int type;
         float mass;
-        float px, py, pz;
-        float vx, vy, vz;
+        float px, py;
+        float vx, vy;
 
-        if (sscanf(line, "%d %f %f %f %f %f %f %f", &type, &mass, &px, &py, &pz, &vx, &vy, &vz) == 8)
+        if (sscanf(line, "%d %f %f %f %f %f", &type, &mass, &px, &py, &vx, &vy) == 6)
         {
+            m_Id = g_BodyIdCounter++;
             m_Type = type;
             m_Mass = mass;
 
-            m_Position = glm::vec3(px, py, pz);
-            m_Velocity = glm::vec3(vx, vy, vz);
+            m_Position = glm::vec3(px, py, 0.f);
+            m_Velocity = glm::vec3(vx, vy, 0.f);
             return true;
         }
         else
@@ -69,18 +73,23 @@ public:
     }
 
 private:
+    int m_Id;
     int m_Type;
     float m_Mass;
 
     glm::vec3 m_Position;
     glm::vec3 m_Velocity;
+
+    static int g_BodyIdCounter;
 };
 
+int CBody::g_BodyIdCounter = 1;
 std::list<CBody> g_Body;
+NBODY g_BodyList;
 
 void Simulate()
 {
-    const float step = 1.f;
+    const float step = 0.02f;
 
     for (CBody& b : g_Body)
     {
@@ -91,12 +100,20 @@ void Simulate()
             if (b == otherb)
                 continue;
 
-            force += b.GetAttraction(otherb);
+            glm::vec3 attr = b.GetAttraction(otherb);
+
+            force += attr;
         }
 
-        b.UpdateVelocity(force / b.GetMass() * step);
+        float mass = b.GetMass();
+        glm::vec3 vel = force / b.GetMass();
+
+        b.UpdateVelocity(vel * step);
         b.UpdatePosition(b.GetVelocity() * step);
     }
+
+    for (CBody& b : g_Body)
+        printf("Body #%d Pos (%.2f,%.2f,%.2f)\n", b.GetId(), b.GetPosition().x, b.GetPosition().y, b.GetPosition().z);
 }
 
 int main(int argc, const char* argv[])
@@ -132,31 +149,32 @@ int main(int argc, const char* argv[])
     printf("Ok\nDefinindo as funções... ");
 
     srv.bind("get", [&]() {
-        NBODY bb;
+        g_BodyList.clear();
 
         for (const CBody& body : g_Body)
         {
             BODY b;
+            b.Id = body.GetId();
             b.Type = body.GetType();
             b.PosX = body.GetPosition().x;
             b.PosY = body.GetPosition().y;
             b.PosZ = body.GetPosition().z;
 
-            bb.push_back(b);
+            g_BodyList.push_back(b);
         }
 
-        return bb;
+        return g_BodyList;
     });
 
     printf("Ok\nEsperando clientes...\n");
 
+    // Run the server loop.
+    srv.async_run();
+
     do
     {
-        // Run the server loop.
-        srv.async_run();
-
         Simulate();
-        Sleep(100);
+        Sleep(10);
     } while (true);
 
 	return EXIT_SUCCESS;
