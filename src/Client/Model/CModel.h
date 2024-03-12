@@ -5,7 +5,7 @@
 
 #include "CMesh.h"
 
-const int MAX_OBJECT = 512;
+const int MAX_OBJECT = 4096;
 
 class CModel
 {
@@ -18,6 +18,9 @@ public:
 	glm::vec3* GetPosition() { return &m_Position; }
 
 	int m_Id;
+	char m_Name[12];
+	float m_Mass;
+
 	std::string m_ObjName;
 	std::string m_ObjDir;
 	std::vector<CMesh*> m_Meshes;

@@ -13,6 +13,7 @@
 #include "rpc/server.h"
 
 const float G = 9.80665f;
+float g_Step = 0.02f;
 
 class CBody
 {
@@ -22,6 +23,7 @@ public:
         m_Id = 0;
         m_Type = 0;
         m_Mass = 0.f;
+        m_Name[0] = 0;
 
         m_Position = glm::vec3();
         m_Velocity = glm::vec3();
@@ -30,6 +32,8 @@ public:
     int GetId() const { return m_Id; }
     int GetType() const { return m_Type; }
     float GetMass() const { return m_Mass; }
+    void SetMass(float newm) { m_Mass = newm; }
+    const char* GetName() const { return m_Name; }
     glm::vec3 GetPosition() const { return m_Position; }
     glm::vec3 GetVelocity() const { return m_Velocity; }
     bool operator==(const CBody& b) { return m_Position == b.GetPosition(); }
@@ -53,16 +57,18 @@ public:
 
     bool ParseLine(const char* line)
     {
+        char name[12];
         int type;
         float mass;
         float px, py;
         float vx, vy;
 
-        if (sscanf(line, "%d %f %f %f %f %f", &type, &mass, &px, &py, &vx, &vy) == 6)
+        if (sscanf(line, "%11s %d %f %f %f %f %f", name, &type, &mass, &px, &py, &vx, &vy) == 7)
         {
             m_Id = g_BodyIdCounter++;
             m_Type = type;
             m_Mass = mass;
+            strcpy(m_Name, name);
 
             m_Position = glm::vec3(px, py, 0.f);
             m_Velocity = glm::vec3(vx, vy, 0.f);
@@ -72,15 +78,16 @@ public:
             return false;
     }
 
+    static int g_BodyIdCounter;
+
 private:
     int m_Id;
     int m_Type;
     float m_Mass;
+    char m_Name[12];
 
     glm::vec3 m_Position;
     glm::vec3 m_Velocity;
-
-    static int g_BodyIdCounter;
 };
 
 int CBody::g_BodyIdCounter = 1;
@@ -89,8 +96,6 @@ NBODY g_BodyList;
 
 void Simulate()
 {
-    const float step = 0.02f;
-
     for (CBody& b : g_Body)
     {
         glm::vec3 force = glm::vec3();
@@ -108,17 +113,21 @@ void Simulate()
         float mass = b.GetMass();
         glm::vec3 vel = force / b.GetMass();
 
-        b.UpdateVelocity(vel * step);
-        b.UpdatePosition(b.GetVelocity() * step);
+        b.UpdateVelocity(vel * g_Step);
+        b.UpdatePosition(b.GetVelocity() * g_Step);
     }
 
-    for (CBody& b : g_Body)
-        printf("Body #%d Pos (%.2f,%.2f,%.2f)\n", b.GetId(), b.GetPosition().x, b.GetPosition().y, b.GetPosition().z);
+    //for (CBody& b : g_Body)
+    //    printf("Body #%d Pos (%.2f,%.2f,%.2f)\n", b.GetId(), b.GetPosition().x, b.GetPosition().y, b.GetPosition().z);
 }
-
-int main(int argc, const char* argv[])
+void Init(bool reload = false)
 {
-    setlocale(LC_ALL, "");
+    g_Step = 0.02f;
+    g_Body.clear();
+
+    CBody::g_BodyIdCounter = 1;
+
+    system("cls");
     printf("Lendo o arquivo... ");
 
     FILE* in = fopen("Server.csv", "rt");
@@ -141,7 +150,18 @@ int main(int argc, const char* argv[])
         fclose(in);
     }
 
-    printf("Ok\nIniciando o servidor RPC... ");
+    printf("Ok\n");
+
+    if (reload)
+        printf("RPC online. Servidor reiniciado... \n");
+}
+
+int main(int argc, const char* argv[])
+{
+    setlocale(LC_ALL, "");
+    
+    Init();
+    printf("Iniciando o servidor RPC... ");
 
 	// Creating a server that listens on port 8080
 	rpc::server srv(rpc::constants::DEFAULT_PORT);
@@ -159,11 +179,27 @@ int main(int argc, const char* argv[])
             b.PosX = body.GetPosition().x;
             b.PosY = body.GetPosition().y;
             b.PosZ = body.GetPosition().z;
+            b.Mass = body.GetMass();
+            strcpy(b.Name, body.GetName());
 
             g_BodyList.push_back(b);
         }
 
         return g_BodyList;
+    });
+
+    srv.bind("reload", [&]() { Init(true); });
+    srv.bind("getStep", [&]() { return g_Step; });
+    srv.bind("setStep", [&](float newStep) { g_Step = newStep; });
+    srv.bind("setMass", [&](int Id, float newMass) {
+        for (CBody& body : g_Body)
+        {
+            if (body.GetId() == Id)
+            {
+                body.SetMass(newMass);
+                break;
+            }
+        }
     });
 
     printf("Ok\nEsperando clientes...\n");

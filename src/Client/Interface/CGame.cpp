@@ -7,9 +7,13 @@
 
 #include "..\nbody.h"
 
+rpc::client* CGame::m_Rpc = NULL;
+
+int CGame::m_BodyNameSize = 0;
+char* CGame::m_BodyName[32] = { NULL };
+
 CGame::CGame() : CEvent()
 {
-    m_Rpc = NULL;
 }
 
 CGame::~CGame()
@@ -18,13 +22,34 @@ CGame::~CGame()
 
 void CGame::Initialize()
 {
+    // Load Stars.
+    for (int i = 0; i < 256; ++i)
+    {
+        CModel* m = CModel::LoadModel("Mesh/Star.obj", true);
+        if (m)
+        {
+            float x = (float)((rand() % 100) - 50);
+            float z = (float)((rand() % 100) - 50);
+
+            m->m_Scale = glm::vec3(0.03f, 0.f, 0.05f);
+            *m->GetPosition() = glm::vec3(x, -(rand() % 10) - 1.f, z);
+        }
+    }
+
     m_Rpc = new rpc::client("127.0.0.1", 8080);
+    CWindow::m_Step = m_Rpc->call("getStep").as<float>();
 
-    // Pre-Load Enemy Models.
-    //CModel::LoadModel("Mesh/Enemy.obj", false);
+    ProcessMiliSecTimer();
 
-    //CModel* earth = CModel::LoadModel("Mesh/Earth.obj", true);
-    //*earth->GetPosition() = glm::vec3(0.f, 5.f, 0.f);
+    for (int Id = 1; Id < 32; ++Id)
+    {
+        CModel* m = CModel::GetModelFromId(Id);
+        if (m == NULL)
+            break;
+
+        m_BodyName[m_BodyNameSize] = m->m_Name;
+        m_BodyNameSize++;
+    }
 }
 
 void CGame::ProcessInput(GLFWwindow* window)
@@ -50,17 +75,34 @@ void CGame::ProcessMiliSecTimer()
 
         for (const BODY& b : result)
         {
-            printf("Spawn Id=%d Type=%d Pos=(%.2f,0.f,%.2f)\n", b.Id, b.Type, b.PosX, b.PosY);
-
             CModel* m = CModel::GetModelFromId(b.Id);
             if (m == NULL)
             {
                 const char* modelStr = NULL;
 
-                //if (b.Type == 0)
-                modelStr = "Mesh/Earth.obj";
+                if (b.Type == 1)
+                    modelStr = "Mesh/Sun.obj";
+                else if (b.Type == 2)
+                    modelStr = "Mesh/Mercurio.obj";
+                else if (b.Type == 3)
+                    modelStr = "Mesh/Earth.obj";
+                else
+                    modelStr = "Mesh/Mars.obj";
 
                 m = CModel::LoadModel(modelStr, true);
+
+                if (m)
+                {
+                    strcpy(m->m_Name, b.Name);
+                    m->m_Mass = b.Mass;
+
+                    if (b.Type == 2)
+                        m->m_Scale *= 0.5f;
+                    else if (b.Type == 3)
+                        m->m_Scale *= 0.7f;
+                    else if (b.Type == 4)
+                        m->m_Scale *= 0.8f;
+                }
             }
 
             if (m)
@@ -75,5 +117,6 @@ void CGame::ProcessMiliSecTimer()
 
 void CGame::ProcessSecTimer()
 {
+    CWindow::m_Step = m_Rpc->call("getStep").as<float>();
 }
 

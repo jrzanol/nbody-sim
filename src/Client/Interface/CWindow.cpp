@@ -5,6 +5,7 @@
 #include "CWindow.h"
 
 glm::mat4 CWindow::m_VP;
+float CWindow::m_Step = 0.f;
 
 CWindow::CWindow()
 {
@@ -130,17 +131,27 @@ bool CWindow::Render()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    static int Selecteditem = 0;
+
+    float newStep = m_Step;
+    int newSelectItem = Selecteditem;
+    float newMass = CModel::GetModelFromId(Selecteditem + 1)->m_Mass;
+
     // Create ImGui Sliders.
-    ImGui::Begin("Space Invaders");
-        if (ImGui::Button("Iniciar Novo Jogo"))
-        {
-            CModel::DeleteAllModel();
-            m_Game.Initialize();
-        }
+    ImGui::Begin("nbody");
+        ImGui::Text("Movimentacao: W/A/S/D");
 
         ImGui::NewLine();
-        ImGui::Text("Movimentacao: W/A/S/D");
-        ImGui::Text("Tiro: Mouse");
+        if (ImGui::Button("Reiniciar"))
+            CGame::m_Rpc->call("reload");
+
+        ImGui::NewLine();
+        ImGui::Text("Step:");
+        ImGui::SliderFloat("step", &newStep, 0.01f, 0.09f);
+
+        ImGui::NewLine();
+        ImGui::Combo("P", &Selecteditem, CGame::m_BodyName, CGame::m_BodyNameSize);
+        ImGui::SliderFloat("mass", &newMass, 1.f, 100.f);
 
         ImGui::NewLine();
         ImGui::Text("Desenvolvido por:");
@@ -150,6 +161,20 @@ bool CWindow::Render()
         ImGui::NewLine();
         ImGui::Text("FPS: %u", g_FPS);
     ImGui::End();
+
+    if (newStep != m_Step)
+    {
+        m_Step = newStep;
+
+        CGame::m_Rpc->call("setStep", newStep);
+    }
+
+    if (newSelectItem == Selecteditem && newMass != CModel::GetModelFromId(Selecteditem + 1)->m_Mass)
+    {
+        CModel::GetModelFromId(Selecteditem + 1)->m_Mass = newMass;
+
+        CGame::m_Rpc->call("setMass", Selecteditem + 1, newMass);
+    }
 
     // Rendering the ImGui.
     ImGui::Render();

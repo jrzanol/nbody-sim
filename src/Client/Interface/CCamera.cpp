@@ -9,7 +9,7 @@
 
 CCamera::CCamera()
 {
-    m_Position = glm::vec3(0.0f, 30.f, 0.f);
+    m_Position = glm::vec3(3.50f, 60.f, 7.5f);
     m_WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     m_Yaw = -90.f;
     m_Pitch = -71.4f;
@@ -31,7 +31,7 @@ void CCamera::ProcessSecTimer()
     if (s_LastShowCamPosition < rawnow)
     {
         printf("Pos %.2f,%.2f,%.2f\n", m_Position.x, m_Position.y, m_Position.z);
-        s_LastShowCamPosition = rawnow + 10;
+        s_LastShowCamPosition = rawnow + 5;
     }
 
     //printf("Pos %.2f,%.2f,%.2f WorldUp %.2f,%.2f,%.2f Yan %.2f Pitch %.2f Zoom %.2f\n", m_Position.x, m_Position.y, m_Position.z, m_WorldUp.x, m_WorldUp.y, m_WorldUp.z, m_Yaw, m_Pitch, m_Zoom);

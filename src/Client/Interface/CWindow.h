@@ -19,6 +19,7 @@ public:
 	bool Render();
 
 	static const glm::mat4& GetVP();
+	static float m_Step;
 
 private:
 	CGame m_Game;

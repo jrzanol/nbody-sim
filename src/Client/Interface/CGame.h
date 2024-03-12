@@ -21,7 +21,9 @@ public:
 	void ProcessMiliSecTimer();
 	void ProcessSecTimer();
 
-private:
-	rpc::client* m_Rpc;
+	static rpc::client* m_Rpc;
+
+	static int m_BodyNameSize;
+	static char* m_BodyName[32];
 };
 
