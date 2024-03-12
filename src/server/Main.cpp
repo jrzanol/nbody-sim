@@ -1,6 +1,7 @@
 // by jrzanol
 // 
 
+#include <omp.h>
 #include <cstdio>
 #include <cstdlib>
 #include <clocale>
@@ -13,7 +14,8 @@
 #include "rpc/server.h"
 
 const float G = 9.80665f;
-float g_Step = 0.02f;
+float g_Step = DEFAULT_STEP;
+bool g_Init = false;
 
 class CBody
 {
@@ -91,24 +93,35 @@ private:
 };
 
 int CBody::g_BodyIdCounter = 1;
-std::list<CBody> g_Body;
+std::vector<CBody> g_Body;
 NBODY g_BodyList;
 
 void Simulate()
 {
+    if (!g_Init)
+        return;
+
     for (CBody& b : g_Body)
     {
-        glm::vec3 force = glm::vec3();
+        float x = 0.f;
+        float y = 0.f;
 
-        for (const CBody& otherb : g_Body)
+        unsigned int i;
+        const unsigned int CurId = b.GetId();
+
+#pragma omp parallel for private(i) reduction(+:x, y)
+        for (i = 0; i < g_Body.size(); ++i)
         {
-            if (b == otherb)
+            if (CurId == g_Body[i].GetId())
                 continue;
 
-            glm::vec3 attr = b.GetAttraction(otherb);
+            glm::vec3 attr = b.GetAttraction(g_Body[i]);
 
-            force += attr;
+            x += attr.x;
+            y += attr.y;
         }
+
+        glm::vec3 force = glm::vec3(x, y, 0.f);
 
         float mass = b.GetMass();
         glm::vec3 vel = force / b.GetMass();
@@ -122,7 +135,7 @@ void Simulate()
 }
 void Init(bool reload = false)
 {
-    g_Step = 0.02f;
+    g_Step = DEFAULT_STEP;
     g_Body.clear();
 
     CBody::g_BodyIdCounter = 1;
@@ -188,6 +201,7 @@ int main(int argc, const char* argv[])
         return g_BodyList;
     });
 
+    srv.bind("init", [&]() { g_Init = true; });
     srv.bind("reload", [&]() { Init(true); });
     srv.bind("getStep", [&]() { return g_Step; });
     srv.bind("setStep", [&](float newStep) { g_Step = newStep; });

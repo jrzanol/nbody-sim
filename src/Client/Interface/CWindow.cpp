@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "CWindow.h"
+#include "../nbody.h"
 
 glm::mat4 CWindow::m_VP;
 float CWindow::m_Step = 0.f;
@@ -28,7 +29,7 @@ bool CWindow::Initialize()
         return false;
 
     /* Create a windowed mode window and its OpenGL context */
-    g_Window = glfwCreateWindow(g_WindowMaxX, g_WindowMaxY, "Space Invaders", NULL, NULL);
+    g_Window = glfwCreateWindow(g_WindowMaxX, g_WindowMaxY, "nbody", NULL, NULL);
     if (!g_Window)
     {
         glfwTerminate();
@@ -142,12 +143,14 @@ bool CWindow::Render()
         ImGui::Text("Movimentacao: W/A/S/D");
 
         ImGui::NewLine();
+        if (ImGui::Button("Iniciar"))
+            CGame::m_Rpc->call("init");
         if (ImGui::Button("Reiniciar"))
             CGame::m_Rpc->call("reload");
 
         ImGui::NewLine();
         ImGui::Text("Step:");
-        ImGui::SliderFloat("step", &newStep, 0.01f, 0.09f);
+        ImGui::SliderFloat("step", &newStep, DEFAULT_STEP, 0.05f);
 
         ImGui::NewLine();
         ImGui::Combo("P", &Selecteditem, CGame::m_BodyName, CGame::m_BodyNameSize);

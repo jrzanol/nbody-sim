@@ -18,3 +18,4 @@ struct BODY
 
 using NBODY = std::vector<BODY>;
 
+const float DEFAULT_STEP = 0.005f;
