@@ -143,7 +143,7 @@ bool CWindow::Render()
         ImGui::Text("Movimentacao: W/A/S/D");
 
         ImGui::NewLine();
-        if (ImGui::Button("Iniciar"))
+        if (ImGui::Button("Iniciar/Pausar"))
             CGame::m_Rpc->call("init");
         if (ImGui::Button("Reiniciar"))
             CGame::m_Rpc->call("reload");

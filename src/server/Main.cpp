@@ -201,7 +201,7 @@ int main(int argc, const char* argv[])
         return g_BodyList;
     });
 
-    srv.bind("init", [&]() { g_Init = true; });
+    srv.bind("init", [&]() { g_Init = !g_Init; });
     srv.bind("reload", [&]() { Init(true); });
     srv.bind("getStep", [&]() { return g_Step; });
     srv.bind("setStep", [&](float newStep) { g_Step = newStep; });
